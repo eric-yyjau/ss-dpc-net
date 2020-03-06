@@ -1,0 +1,6 @@
+[submodule "liegroups"]
+	path = liegroups
+	url = git@github.com:utiasSTARS/liegroups.git
+[submodule "pyslam"]
+	path = pyslam
+	url = git@github.com:utiasSTARS/pyslam.git
