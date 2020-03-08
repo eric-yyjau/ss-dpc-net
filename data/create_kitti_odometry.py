@@ -19,7 +19,10 @@ target_dir = args.target_dir
 os.makedirs(target_dir, exist_ok=True)
 seq_info = {}
 sequences = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+# sequences = [f'{i:02}' for i in range(21)]
+print(f"seq: {sequences}")
 
+mode = 'online'
 if mode == 'online':
     args.height = 240
     args.width = 376

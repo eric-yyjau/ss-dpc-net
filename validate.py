@@ -7,6 +7,7 @@ from utils.lie_algebra import se3_log_exp
 import numpy as np
 from liegroups import SE3
 from pyslam.metrics import TrajectoryMetrics
+from tqdm import tqdm
 
 def Validate(device, pose_model, spatial_trans, dset, loss):
     start = time.time()
@@ -85,7 +86,7 @@ def test_trajectory(device, pose_model, spatial_trans, dset, epoch):
     full_corr_lie_alg_stacked, rot_corr_lie_alg_stacked, gt_lie_alg_stacked, vo_lie_alg_stacked, corrections_stacked, gt_corrections_stacked= \
             np.empty((0,6)), np.empty((0,6)), np.empty((0,6)), np.empty((0,6)), np.empty((0,6)), np.empty((0,6))
 
-    for data in dset:
+    for data in tqdm(dset):
         imgs, gt_lie_alg, intrinsics, vo_lie_alg, gt_correction = data
         gt_lie_alg = gt_lie_alg.type(torch.FloatTensor).to(device)   
         vo_lie_alg = vo_lie_alg.type(torch.FloatTensor).to(device)

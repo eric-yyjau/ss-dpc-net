@@ -66,8 +66,10 @@ class KittiLoaderPytorch(torch.utils.data.Dataset):
             seq = []
             seq_name={}
 
+            print(f"basedir: {basedir}")
             for d in glob.glob('{}/**'.format(basedir), recursive=False):
                 name = d.replace(basedir, '').replace('/','')
+                # print(f"name: {name}")
                 i=0
                 for s in val_seq:
                     if name == seq_names[s]:
@@ -91,6 +93,7 @@ class KittiLoaderPytorch(torch.utils.data.Dataset):
             seq = test_seq
         print('{} sequences: {}'.format(mode,seq))
         for s,i in zip(seq,range(0,len(seq))):
+            print(f"seq: {seq}, seq_name: {seq_name}")
             print(os.path.join(basedir, seq_name[s],'{}_data.mat'.format(config['estimator_type'])))
             data = sio.loadmat(os.path.join(basedir, seq_name[s],'{}_data.mat'.format(config['estimator_type'])))
             

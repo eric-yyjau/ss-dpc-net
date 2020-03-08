@@ -14,15 +14,20 @@ import argparse
 import os 
 import glob
 from liegroups import SE3
+from pathlib import Path
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 device = torch.device(0)
 
 parser = argparse.ArgumentParser(description='')
-parser.add_argument('--data_dir', type=str, default='/media/brandon/DATA/KITTI-odometry-downsized/')
+parser.add_argument('exp_name', type=str, default='exp name')
+# parser.add_argument('--data_dir', type=str, default='/media/brandon/DATA/KITTI-odometry-downsized/')
+parser.add_argument('--data_dir', type=str, default='dataset/KITTI-downsized/')
 parser.add_argument('--mode', type=str, default='online')
 parser.add_argument('--estimator_type', type=str, default='stereo')
-parser.add_argument('--val_seq', nargs='+',type=str, default='19')
+parser.add_argument('--pretrained', type=str, 
+    default='paper_plots_and_data/best_mono/2019-7-6-23-41-best-loss-val_seq-00-test_seq-10.pth')
+parser.add_argument('--val_seq', nargs='+',type=str, default='09')
 parser.add_argument('--exploss', action='store_true', default=True)
 config={
     'num_frames': None,
@@ -44,7 +49,8 @@ for k in args.__dict__:
     
 model_dirs = 'paper_plots_and_data/'
 date = 'best_stereo'
-pretrained_path = '{}/{}/2019-6-24-13-4-most_loop_closures-val_seq-00-test_seq-05.pth'.format(model_dirs, date)
+pretrained_path = args.pretrained
+# pretrained_path = '{}/{}/2019-6-24-13-4-most_loop_closures-val_seq-00-test_seq-05.pth'.format(model_dirs, date)
 
 output_dir = '{}{}/'.format(model_dirs,date)
 args.data_dir = '{}/{}'.format(args.data_dir,args.mode)
@@ -76,5 +82,21 @@ tm_dict = {'Dense': dense_tm,
             'libviso2-s': est_tm,
                'Ours (Gen.)': corr_tm,
                }
-est_vis = visualizers.TrajectoryVisualizer(tm_dict)
-fig, ax = est_vis.plot_topdown(which_plane='xy', plot_gt=False, outfile = 'paper_plots_and_data/figs/{}.pdf'.format(seq[0]), title=r'{}'.format(seq[0]))
+
+save_dict = {'gt.txt': np.array(gt_traj).reshape(-1,16)[:,:12],
+            'libviso2-s.txt': np.array(est_traj).reshape(-1,16)[:,:12],
+               'corr.txt': np.array(corr_traj_rot).reshape(-1,16)[:,:12],
+               }
+print(f"gt_traj: {np.array(gt_traj)}")
+def save_traj(exp_name, traj, traj_name='traj.txt'):
+    Path(f"results/{exp_name}").mkdir(parents=True, exist_ok=True)
+    np.savetxt(f"results/{exp_name}/{traj_name}", traj)
+    pass
+for i, en in enumerate(save_dict):
+    save_traj(args.exp_name, save_dict[en],  traj_name=args.val_seq + en)
+
+view = False
+if view:
+    est_vis = visualizers.TrajectoryVisualizer(tm_dict)
+    # fig, ax = est_vis.plot_topdown(which_plane='xy', plot_gt=False, outfile = 'paper_plots_and_data/figs/{}.pdf'.format(seq[0]), title=r'{}'.format(seq[0]))
+    fig, ax = est_vis.plot_topdown(which_plane='xy', plot_gt=False, outfile = 'paper_plots_and_data/figs/{}.png'.format(seq[0]), title=r'{}'.format(seq[0]))

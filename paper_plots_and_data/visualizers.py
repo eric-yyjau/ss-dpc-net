@@ -110,7 +110,7 @@ class TrajectoryVisualizer:
         ax.set_xlabel('Easting (m)', fontsize=plot_params['fontsize'])
         ax.set_ylabel('Northing (m)', fontsize=plot_params['fontsize'])
         ax.legend(fancybox=True, framealpha=0.5, loc=1 )#, fontsize=plot_params['legend_fontsize'])
-        plt.show()
+        # plt.show()
         if outfile is not None:
             print('Saving to {}'.format(outfile))
             fig.savefig(outfile)
