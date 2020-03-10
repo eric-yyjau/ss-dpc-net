@@ -27,7 +27,8 @@ parser.add_argument('--mode', type=str, default='online')
 parser.add_argument('--estimator_type', type=str, default='stereo')
 parser.add_argument('--pretrained', type=str, 
     default='paper_plots_and_data/best_mono/2019-7-6-23-41-best-loss-val_seq-00-test_seq-10.pth')
-parser.add_argument('--val_seq', nargs='+',type=str, default='09')
+# parser.add_argument('--val_seq', nargs='+',type=str, default='09')
+parser.add_argument('--val_seq',type=str, default='10')
 parser.add_argument('--exploss', action='store_true', default=True)
 config={
     'num_frames': None,
